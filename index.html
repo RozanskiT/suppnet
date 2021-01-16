@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html> 
+
+<head>
+    <title>HandyNet</title>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css.d784b694.css">
+</head>
+
+<div class="w3-container" id="global_container">
+    <h1>Spectrum normalisation neural network - HandyNet</h1>
+    <hr>
+
+    <section>
+        <h3 class="section-head">About</h3>
+    </section>
+    <hr>
+
+    <section>
+        <h3 class="section-head">Status</h3>
+        <div id="status"></div>
+    </section>
+    <hr>
+
+  <div class="w3-row">
+    <a href="javascript:void(0)" onclick="openCity(event, 'Upload');">
+      <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Upload file</div>
+    </a>
+    <a href="javascript:void(0)" onclick="openCity(event, 'Normalize');">
+      <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Normalise</div>
+    </a>
+    <a href="javascript:void(0)" onclick="openCity(event, 'Download');">
+      <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Download</div>
+    </a>
+  </div>
+
+  <div id="Upload" class="w3-container city" style="display:none">
+    <h3>Upload file</h3>
+    <p>Choose your separator and next add your file, then move to Normalise tab. </p>
+    <p> </p>
+    <center> 
+        <div class="separators-options-group">
+            <h4>Enter data:</h4>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="RadioData" id="loadsampledata" value="1" checked="checked">
+                        <span>Load sample data</span>
+                        <h6></h6>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="RadioData" id="uploaddata" value="2">
+                        <span>Upload file</span>
+                    </label>
+                </div>
+                <h4></h4>
+                <div class="area"> 
+                    <input type="file" id="files" name="files[]">
+                </div>
+            <h4>Separator:</h4>
+                <div class="radio">
+                    <label>
+                        <input type="radio" id="sepcomma" name="fileSep" value="1" checked="checked">
+                        <span>Comma</span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" id="sepspace" name="fileSep" value="2">
+                        <span>Space</span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" id="sepsemicolon" name="fileSep" value="3">
+                        <span>Semicolon</span>
+                    </label>
+                </div>
+        </div>
+        <h1 style="color: green;"> 
+            Table
+        </h1>
+        <div id="output"></div>
+    </center> 
+  </div>
+
+  <div id="Normalize" class="w3-container city" style="display:none">
+    <h3>Normalise</h3>
+    <p>...</p> 
+    <button id="normalize">Normalise spectrum</button>
+    <br><br>
+    <div id="myPlot"></div>
+  </div>
+
+  <div id="Download" class="w3-container city" style="display:none">
+    <h3>Download</h3>
+    <p>Enter filename here: </p>
+    <input type="text" id="filename" value="output.txt">
+    <br><br><br>
+    <input type="button" id="dwn-btn" value="Download result">
+  </div>
+</div>
+
+<script>function openCity(evt, cityName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("city");
+
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+
+  tablinks = document.getElementsByClassName("tablink");
+
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-border-red", "");
+  }
+
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.firstElementChild.className += " w3-border-red";
+}</script>
+    <script src="HandyNet-dev.fbd2cba1.js" type="text/javascript"></script> 
+
+</html> 
