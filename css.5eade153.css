@@ -1,0 +1,51 @@
+div.area { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+} 
+
+input.area { 
+    margin-top: 10px; 
+} 
+
+textarea.area { 
+    margin-top: 15px; 
+    width: 70%; 
+}
+#global_container {
+    height :100vh;
+}
+#Normalize {
+    height :100vh;
+}
+#myPlot {
+    height :100vh;
+}
+
+h2 {
+    font-family: Roboto, sans-serif;
+}
+
+.rotate90 {
+    width: 75px;
+    height: 75px;
+    //animation: spin 2s linear infinite;
+    overflow: hidden;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.div1 {
+     border-bottom: : 100px solid #0000;
+}
+.img {
+    float: left;
+    background: #000;
+}
+.div2 {
+    float: left;
+    border-right: 30px solid #0000;
+} 
