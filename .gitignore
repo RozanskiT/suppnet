@@ -1,1 +1,4 @@
 design_window_qt
+__pycache__
+example_data/*.norm
+example_data/*.all
