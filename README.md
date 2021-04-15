@@ -1,11 +1,11 @@
 # SUPPNet: Neural network for stellar spectrum normalisation
-## Stacked U-Net with Pyramid Pooling modules
 ---
 ## Installing Guide
 
 ### 1. Requirements
 
-A necesssary conda environment named `suppnet-env` can be created and activated with:
+Start by creating and activating a [conda](conda.io) environment `suppnet-env`, that handles all dependencies.
+
 ```
 conda env create -f environment.yml
 conda activate suppnet-env
