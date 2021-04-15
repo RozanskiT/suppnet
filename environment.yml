@@ -1,0 +1,13 @@
+name: suppnet-env
+channels:
+  - conda-forge
+  - anaconda
+dependencies:
+  - python
+  - numpy
+  - scipy
+  - matplotlib
+  - pandas
+  - pyside2
+  - tensorflow=2.4
+  - notebook
