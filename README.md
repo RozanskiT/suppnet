@@ -7,9 +7,20 @@ SUPPNet can be istalled in several simple steps.
 
 Install [anaconda](conda.io) Python distribution.
 
-### 1. Requirements
+### 1. Download repository
 
-Start by creating and activating a [conda](conda.io) environment `suppnet-env` that handles all dependencies.
+Download `suppnet` repository by:
+```
+git clone 
+```
+Now move to the `suppnet` directory:
+```
+cd suppnet
+```
+
+### 2. Requirements
+
+Now create and activate a [conda](conda.io) environment `suppnet-env` that handles all dependencies.
 
 ```
 conda env create -f environment.yml
