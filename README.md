@@ -34,16 +34,16 @@ python suppnet.py
 The program window should pop-up and from now you can normalise your spectra. Typical usage scenarios are:
 
 1. Spectrum-by-spectrum normalisation using interactive app:
- ```
-    python suppnet.py [--segmentation]
- ```
+```
+python suppnet.py [--segmentation]
+```
 2. Normalisation of group of spectra without any supervision:
- ```
-    python suppnet.py --quiet [--skip number_of_rows_to_skip] path_to_spec_1.txt [path_to_spec_2.txt ...]
- ```
+```
+python suppnet.py --quiet [--skip number_of_rows_to_skip] path_to_spec_1.txt [path_to_spec_2.txt ...]
+```
 3. Manual inspection and correction of previously normalised spectrum, SUPPNet will not be loaded (often used in pair with 2.):
- ```
-    python suppnet.py [--segmentation] --path path_to_processing_results.all
+```
+python suppnet.py [--segmentation] --path path_to_processing_results.all
 ```
 
 You can always remind yourself the typical usage by writing:
