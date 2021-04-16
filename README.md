@@ -11,7 +11,7 @@ Install [anaconda](conda.io) Python distribution.
 
 Download `suppnet` repository by:
 ```
-git clone 
+git clone https://github.com/RozanskiT/suppnet-dev.git
 ```
 Now move to the `suppnet` directory:
 ```
