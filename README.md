@@ -16,7 +16,7 @@ conda env create -f environment.yml
 conda activate suppnet-env
 ```
 ## Usage
-After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have `euppnet-env` running):
+After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have `suppnet-env` running):
 ```
 python suppnet.py
 ```
