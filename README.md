@@ -35,7 +35,7 @@ The program window should pop-up and from now you can normalise your spectra. Ty
     python suppnet.py [--segmentation] --path path_to_processing_results.all
 ```
 
-You can always remind you the typical usage by writing:
+You can always remind yourself the typical usage by writing:
 ```
 python suppnet.py --help
 ```
