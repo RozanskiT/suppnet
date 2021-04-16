@@ -18,7 +18,7 @@ Now move to the `suppnet` directory:
 cd suppnet
 ```
 
-### 2. Requirements
+### 2. Handle requirements
 
 Now create and activate a [conda](conda.io) environment `suppnet-env` that handles all dependencies.
 
