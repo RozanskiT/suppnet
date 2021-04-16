@@ -229,9 +229,25 @@ def run_window_app(path=None, show_segmentation=False):
 
 def argument_parser():
     import argparse
+    from argparse import RawTextHelpFormatter
+
+    description = "\n".join([
+        "Code for stellar spectrum normalisation based on neural network SUPPNet",
+        " ",
+        "Usage scenarios:",
+        "1. Spectrum-by-spectrum normalisation using interactive app:"," ",
+        "    python suppnet.py [--segmentation]",
+        " ",
+        "2. Normalisation of group of spectra without any supervision:"," ",
+        "    python suppnet.py --quiet [--skip number_of_rows_to_skip] path_to_spectrum_1.txt [path_to_spectrum_2.txt ...]",
+        " ",
+        "3. Manual inspection of previously normalised spectrum, SUPPNet will not be loaded (often used in pair with 2.):"," ",
+        "    python suppnet.py [--segmentation] --path path_to_processing_results.all",
+        " ",
+    ])
 
     parser = argparse.ArgumentParser(
-        description='Normalise some stellar spectra using SUPNet')
+        description=description, formatter_class=RawTextHelpFormatter)
 
     parser.add_argument('--quiet',
                         dest='without_window_app',
