@@ -13,9 +13,9 @@ Download `suppnet` repository by:
 ```
 git clone https://github.com/RozanskiT/suppnet-dev.git
 ```
-Now move to the `suppnet` directory:
+Now change the directory to `suppnet-dev`:
 ```
-cd suppnet
+cd suppnet-dev
 ```
 
 ### 2. Handle requirements
