@@ -241,7 +241,7 @@ def argument_parser():
         "2. Normalisation of group of spectra without any supervision:"," ",
         "    python suppnet.py --quiet [--skip number_of_rows_to_skip] path_to_spectrum_1.txt [path_to_spectrum_2.txt ...]",
         " ",
-        "3. Manual inspection of previously normalised spectrum, SUPPNet will not be loaded (often used in pair with 2.):"," ",
+        "3. Manual inspection and correction of previously normalised spectrum, SUPPNet will not be loaded (often used in pair with 2.):"," ",
         "    python suppnet.py [--segmentation] --path path_to_processing_results.all",
         " ",
     ])
