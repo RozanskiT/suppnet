@@ -5,6 +5,8 @@
 [__SUPPNet: Neural network for stellar spectrum normalisation__](https://rozanskit.com/suppnet/)\
 [Różański Tomasz](https://rozanskit.com/)<sup>1</sup>, Niemczura Ewa<sup>1</sup>, Lemiesz Jakub<sup>2</sup>, Posiłek Natalia<sup>1</sup>, Różański Paweł<sup>2</sup>
 
+![Here should be example_run.gif](gifs/example_run.gif) 
+
 <sup><sub>1. Astronomical Institute, University of Wrocław, Kopernika 11, 51-622 Wrocław, Poland 2. Department  of  Computer  Science,  Faculty  of  Fundamental  Problems  of  Technology,  Wrocław  University  of  Science  andTechnology, Wrocław, Poland</sup></sub>
 
 ---
