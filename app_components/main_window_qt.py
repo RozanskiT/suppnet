@@ -3,13 +3,12 @@
 # Form implementation generated from reading ui file 'mainwindow.ui',
 # licensing of 'mainwindow.ui' applies.
 #
-# Created: Thu Apr 15 21:24:57 2021
+# Created: Sat Jun  5 21:40:43 2021
 #      by: pyside2-uic  running on PySide2 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide2 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -21,12 +20,10 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.frame.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
         self.frame.setMinimumSize(QtCore.QSize(0, 20))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -47,12 +44,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.update_normalization)
         self.verticalLayout.addWidget(self.frame)
         self.mplwindow = QtWidgets.QWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.mplwindow.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.mplwindow.sizePolicy().hasHeightForWidth())
         self.mplwindow.setSizePolicy(sizePolicy)
         self.mplwindow.setObjectName("mplwindow")
         self.mplvl = QtWidgets.QVBoxLayout(self.mplwindow)
@@ -86,14 +81,11 @@ class Ui_MainWindow(object):
         self.action_normalize.setEnabled(False)
         self.action_normalize.setObjectName("action_normalize")
         self.actionOpen_processed_spectrum = QtWidgets.QAction(MainWindow)
-        self.actionOpen_processed_spectrum.setObjectName(
-            "actionOpen_processed_spectrum")
+        self.actionOpen_processed_spectrum.setObjectName("actionOpen_processed_spectrum")
         self.actionSave_for_active_learning = QtWidgets.QAction(MainWindow)
-        self.actionSave_for_active_learning.setObjectName(
-            "actionSave_for_active_learning")
+        self.actionSave_for_active_learning.setObjectName("actionSave_for_active_learning")
         self.actionSave_normed_spectrum = QtWidgets.QAction(MainWindow)
-        self.actionSave_normed_spectrum.setObjectName(
-            "actionSave_normed_spectrum")
+        self.actionSave_normed_spectrum.setObjectName("actionSave_normed_spectrum")
         self.menuFile.addAction(self.actionOpen_spectrum)
         self.menuFile.addAction(self.actionSave_normed_spectrum)
         self.menuFile.addAction(self.actionSave_results)
@@ -108,31 +100,18 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtWidgets.QApplication.translate(
-            "MainWindow", "SUPPNet spectrum normalisation ", None, -1))
-        self.slider_value.setText(
-            QtWidgets.QApplication.translate("MainWindow", "0.0", None, -1))
-        self.update_normalization.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Update Normalization", None, -1))
-        self.menuFile.setTitle(QtWidgets.QApplication.translate(
-            "MainWindow", "File", None, -1))
-        self.toolBar.setWindowTitle(QtWidgets.QApplication.translate(
-            "MainWindow", "toolBar", None, -1))
-        self.actionasdsd.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "asdsd", None, -1))
-        self.action_save_file.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "save file", None, -1))
-        self.actionOpen_spectrum.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Open spectrum", None, -1))
-        self.actionSave_results.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Save full results", None, -1))
-        self.actionClose.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Close", None, -1))
-        self.action_normalize.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Normalize", None, -1))
-        self.actionOpen_processed_spectrum.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Open processed spectrum", None, -1))
-        self.actionSave_for_active_learning.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Save for active learning", None, -1))
-        self.actionSave_normed_spectrum.setText(QtWidgets.QApplication.translate(
-            "MainWindow", "Save normed spectrum", None, -1))
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "SUPPNet - stellar spectrum normalisation", None, -1))
+        self.slider_value.setText(QtWidgets.QApplication.translate("MainWindow", "0.0", None, -1))
+        self.update_normalization.setText(QtWidgets.QApplication.translate("MainWindow", "Update Smoothing", None, -1))
+        self.menuFile.setTitle(QtWidgets.QApplication.translate("MainWindow", "File", None, -1))
+        self.toolBar.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "toolBar", None, -1))
+        self.actionasdsd.setText(QtWidgets.QApplication.translate("MainWindow", "asdsd", None, -1))
+        self.action_save_file.setText(QtWidgets.QApplication.translate("MainWindow", "save file", None, -1))
+        self.actionOpen_spectrum.setText(QtWidgets.QApplication.translate("MainWindow", "Open spectrum", None, -1))
+        self.actionSave_results.setText(QtWidgets.QApplication.translate("MainWindow", "Save full results", None, -1))
+        self.actionClose.setText(QtWidgets.QApplication.translate("MainWindow", "Close", None, -1))
+        self.action_normalize.setText(QtWidgets.QApplication.translate("MainWindow", "Run SUPPNet", None, -1))
+        self.actionOpen_processed_spectrum.setText(QtWidgets.QApplication.translate("MainWindow", "Open processed spectrum", None, -1))
+        self.actionSave_for_active_learning.setText(QtWidgets.QApplication.translate("MainWindow", "Save for active learning", None, -1))
+        self.actionSave_normed_spectrum.setText(QtWidgets.QApplication.translate("MainWindow", "Save normed spectrum", None, -1))
+
