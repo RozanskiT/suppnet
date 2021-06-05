@@ -1,5 +1,7 @@
 # SUPPNet: Neural network for stellar spectrum normalisation
 ---
+
+---
 ## Installing Guide
 SUPPNet can be istalled in several simple steps.
 

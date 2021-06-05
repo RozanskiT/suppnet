@@ -176,6 +176,15 @@ class Logic:
     def get_plotting_data(self):
         return self.spectrum
 
+    def set_sampling(self, sampling):
+        if self.nn is not None:
+            self.nn.resampling_step = sampling
+
+    def get_sampling(self):
+        if self.nn is not None:
+            return self.nn.resampling_step
+        else:
+            return None
 
 def main():
     pass

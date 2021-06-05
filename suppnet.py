@@ -41,6 +41,10 @@ class MainWindow(QMainWindow):
         self.ui.update_normalization.clicked.connect(
             self.on_update_normalization)
 
+        self.ui.sampling_spin_box.lineEdit().setReadOnly(True)
+        self.ui.sampling_spin_box.valueChanged.connect(
+            self.on_update_sampling)
+
         self.addmpl()
 
         self.ui.actionOpen_spectrum.triggered.connect(self.load_spectrum)
@@ -97,6 +101,9 @@ class MainWindow(QMainWindow):
         self.logic.on_adjust_smooth_factor(slider_value)
         self.update_plots_and_data(resize=False)
 
+    def on_update_sampling(self):
+        self.logic.set_sampling(self.ui.sampling_spin_box.value())
+
     def for_threading(self):
         worker = Worker(*self.logic.get_model())
         worker.signals.result.connect(self.load_model)
@@ -107,6 +114,7 @@ class MainWindow(QMainWindow):
 
     def thread_complete(self):
         self.ui.action_normalize.setEnabled(True)
+        self.ui.sampling_spin_box.setValue(self.logic.get_sampling())
         self.ui.statusbar.showMessage("Model loaded")
 
     def load_model(self, model):
@@ -191,7 +199,7 @@ class MainWindow(QMainWindow):
 
     def create_plots(self):
         self.fig.subplots_adjust(
-            wspace=0.0, hspace=0.0, top=0.95, bottom=0.05, left=0.05, right=0.95)
+            wspace=0.0, hspace=0.0, top=0.95, bottom=0.10, left=0.10, right=0.95)
 
         if self.show_segmentation:
             gs = GridSpec(6, 1)
@@ -203,6 +211,7 @@ class MainWindow(QMainWindow):
         self.line11, = self.ax1.plot([], [], 'k-', zorder=20)
         self.line12, = self.ax1.plot([], [], 'b-', zorder=30)
         self.ds = DraggableScatter(self.ax1, [], [], self)
+        self.ax1.set_ylabel("Flux")
 
         self.ax2 = self.fig.add_subplot(gs[3:5], sharex=self.ax1)
         self.ax2.grid(True)
@@ -210,12 +219,17 @@ class MainWindow(QMainWindow):
 
         self.ax1.set_autoscaley_on(True)
         self.ax2.set_ylim([0.1, 2.0])
+        self.ax2.set_ylabel("Normed flux")
 
         if self.show_segmentation:
             self.ax3 = self.fig.add_subplot(gs[5:], sharex=self.ax1)
             self.ax3.grid(True)
             self.line31, = self.ax3.plot([], [], 'k', zorder=20)
             self.ax3.set_ylim([-0.1, 1.1])
+            self.ax3.set_xlabel("Segmentation")
+            self.ax3.set_xlabel(r"Wavelength [$\AA$]")
+        else:
+            self.ax2.set_xlabel(r"Wavelength [$\AA$]")
 
 
 def run_window_app(path=None, show_segmentation=False):

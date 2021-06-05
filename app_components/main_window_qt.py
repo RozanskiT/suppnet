@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'mainwindow.ui',
 # licensing of 'mainwindow.ui' applies.
 #
-# Created: Sat Jun  5 21:40:43 2021
+# Created: Sat Jun  5 22:49:16 2021
 #      by: pyside2-uic  running on PySide2 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(846, 771)
+        MainWindow.resize(1056, 766)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -31,14 +31,31 @@ class Ui_MainWindow(object):
         self.frame.setObjectName("frame")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.slider_value = QtWidgets.QLabel(self.frame)
-        self.slider_value.setMinimumSize(QtCore.QSize(20, 0))
-        self.slider_value.setObjectName("slider_value")
-        self.horizontalLayout.addWidget(self.slider_value)
+        self.label = QtWidgets.QLabel(self.frame)
+        self.label.setObjectName("label")
+        self.horizontalLayout.addWidget(self.label)
+        self.sampling_spin_box = QtWidgets.QDoubleSpinBox(self.frame)
+        self.sampling_spin_box.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+        self.sampling_spin_box.setAcceptDrops(False)
+        self.sampling_spin_box.setReadOnly(False)
+        self.sampling_spin_box.setKeyboardTracking(False)
+        self.sampling_spin_box.setMinimum(0.03)
+        self.sampling_spin_box.setMaximum(0.07)
+        self.sampling_spin_box.setSingleStep(0.01)
+        self.sampling_spin_box.setProperty("value", 0.05)
+        self.sampling_spin_box.setObjectName("sampling_spin_box")
+        self.horizontalLayout.addWidget(self.sampling_spin_box)
+        self.label_2 = QtWidgets.QLabel(self.frame)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout.addWidget(self.label_2)
         self.horizontalSlider = QtWidgets.QSlider(self.frame)
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
         self.horizontalLayout.addWidget(self.horizontalSlider)
+        self.slider_value = QtWidgets.QLabel(self.frame)
+        self.slider_value.setMinimumSize(QtCore.QSize(20, 0))
+        self.slider_value.setObjectName("slider_value")
+        self.horizontalLayout.addWidget(self.slider_value)
         self.update_normalization = QtWidgets.QPushButton(self.frame)
         self.update_normalization.setObjectName("update_normalization")
         self.horizontalLayout.addWidget(self.update_normalization)
@@ -59,7 +76,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 846, 20))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1056, 20))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -101,6 +118,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "SUPPNet - stellar spectrum normalisation", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "Set sampling", None, -1))
+        self.label_2.setText(QtWidgets.QApplication.translate("MainWindow", "Å", None, -1))
         self.slider_value.setText(QtWidgets.QApplication.translate("MainWindow", "0.0", None, -1))
         self.update_normalization.setText(QtWidgets.QApplication.translate("MainWindow", "Update Smoothing", None, -1))
         self.menuFile.setTitle(QtWidgets.QApplication.translate("MainWindow", "File", None, -1))
