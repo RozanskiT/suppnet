@@ -2,8 +2,8 @@
 
 ---
 
-[__SUPPNet: Neural network for stellar spectrum normalisation__](rozanskit.com/suppnet)
-[Różański Tomasz](rozanskit.com), Niemczura Ewa, Lemiesz Jakub, Posiłek Natalia, Różański Paweł
+[__SUPPNet: Neural network for stellar spectrum normalisation__](https://rozanskit.com/suppnet/)
+[Różański Tomasz](https://rozanskit.com/), Niemczura Ewa, Lemiesz Jakub, Posiłek Natalia, Różański Paweł
 
 ---
 
