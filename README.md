@@ -1,7 +1,12 @@
 # SUPPNet: Neural network for stellar spectrum normalisation
----
 
 ---
+
+[__SUPPNet: Neural network for stellar spectrum normalisation__](rozanskit.com/suppnet)
+[Różański Tomasz](rozanskit.com), Niemczura Ewa, Lemiesz Jakub, Posiłek Natalia, Różański Paweł
+
+---
+
 ## Installing Guide
 SUPPNet can be istalled in several simple steps.
 
