@@ -33,7 +33,7 @@ class ProcessSpectrum:
     def get_results(self, processed, shifts):
         reshaped = np.array([np.roll(part, shift=-shift).flatten()
                              for part, shift in zip(np.split(processed, shifts.shape[0]), shifts)])
-        w = self.generate_weights(sigma=2, length=reshaped.shape[0])
+        w = self.generate_weights(sigma=3, length=reshaped.shape[0])
         return self.weighted_avg_and_std(reshaped, w)
         # return np.nanmean(reshaped, axis=0), np.nanstd(reshaped, axis=0)
 

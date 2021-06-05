@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import traceback
 from PySide2.QtCore import QObject, Signal, QRunnable, Slot
+
 
 class WorkerSignals(QObject):
     '''
@@ -12,10 +14,10 @@ class WorkerSignals(QObject):
 
     finished
         No data
-    
+
     error
         `tuple` (exctype, value, traceback.format_exc() )
-    
+
     result
         `object` data returned from processing, anything
 
@@ -27,6 +29,7 @@ class WorkerSignals(QObject):
     error = Signal(tuple)
     result = Signal(object)
     progress = Signal(int)
+
 
 class Worker(QRunnable):
     '''
@@ -50,17 +53,16 @@ class Worker(QRunnable):
         self.args = args
         self.kwargs = kwargs
         self.signals = WorkerSignals()
-        print(self.args)
 
         # Add the callback to our kwargs
-        # self.kwargs['progress_callback'] = self.signals.progress        
+        # self.kwargs['progress_callback'] = self.signals.progress
 
     @Slot()
     def run(self):
         '''
         Initialise the runner function with passed args, kwargs.
         '''
-        
+
         # Retrieve args/kwargs here; and fire processing using them
         try:
             result = self.fn(*self.args, **self.kwargs)
@@ -69,13 +71,15 @@ class Worker(QRunnable):
             exctype, value = sys.exc_info()[:2]
             self.signals.error.emit((exctype, value, traceback.format_exc()))
         else:
-            self.signals.result.emit(result)  # Return the result of the processing
+            # Return the result of the processing
+            self.signals.result.emit(result)
         finally:
             self.signals.finished.emit()  # Done
+
 
 def main():
     pass
 
 
 if __name__ == '__main__':
-	main()
+    main()

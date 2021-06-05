@@ -85,7 +85,6 @@ class Logic:
         self.fit_spline()
         print(f"Normed spectrum noise = {self.normed_spectrum_noise:.4f}")
 
-
     def update_all(self):
         self.compute_normed_spectrum()
 

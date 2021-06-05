@@ -2,146 +2,289 @@
 # -*- coding: utf-8 -*-
 
 from itertools import accumulate
+import os
+import numpy as np
 
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Conv1D, AveragePooling1D, Concatenate
-from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.backend import clear_session
 
+from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, UpSampling1D, Dropout, concatenate
+from tensorflow.keras.layers import Conv1DTranspose, GlobalAveragePooling1D, Dense, Multiply, Add, Concatenate, add
+from tensorflow.keras.layers import ReLU, LayerNormalization, Conv1DTranspose, AveragePooling1D
+from tensorflow.keras.models import Model, load_model
+import tensorflow.keras.backend as K
 
-def UpSampling1D_layers(inputs, size=2):
-    x = tf.keras.layers.Reshape((inputs.shape[1], 1, inputs.shape[2]))(inputs)
-    x = tf.keras.layers.UpSampling2D(
-        size=(size, 1), data_format=None, interpolation="bilinear")(x)
-    return tf.keras.layers.Reshape((x.shape[1], x.shape[3]))(x)
 
+def residual_block(x, width, bottleneck_ratio=1, group_width=None, name=None):
+    if group_width is None:
+        group_width = width
+    else:
+        group_width = min(group_width, width)
+    y = x
 
-def conv_block(x, no_channels, no_layers=2):
+    name_1 = None if name is None else name+"_1"
+    x = Conv1D(width, 1, padding='same', name=name_1)(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
 
-    for i in range(no_layers):
-        x = Conv1D(no_channels, 3, activation='relu', padding='same')(x)
+    layers_for_concat = []
+    for i in range(width//bottleneck_ratio//group_width):
+        name_2 = None if name is None else name+f"_2_gr{i}"
+        _x = Conv1D(group_width, 3, padding='same', name=name_2)(x)
+#         _x = LayerNormalization()(_x)
+        _x = ReLU()(_x)
+        layers_for_concat.append(_x)
+    if len(layers_for_concat) > 1:
+        x = Concatenate()(layers_for_concat)
+    else:
+        x = layers_for_concat[0]
+
+    name_3 = None if name is None else name+f"_3"
+    x = Conv1D(width, 1, padding='same', name=name_3)(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
+
+    x = Add()([x, y])
     return x
 
 
-def pspnet_module_unet(input_features, compression):
-    x = [input_features]
+def residual_stride_block(x, width, bottleneck_ratio=1, group_width=None, stride=2):
+    if group_width is None:
+        group_width = width
+    else:
+        group_width = min(group_width, width)
+    y = x
+
+    x = Conv1D(width, 1, padding='same')(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
+
+    layers_for_concat = []
+    for i in range(width//bottleneck_ratio//group_width):
+        _x = Conv1D(group_width, 3, padding='same', strides=stride)(x)
+#         _x = LayerNormalization()(_x)
+        _x = ReLU()(_x)
+        layers_for_concat.append(_x)
+    if len(layers_for_concat) > 1:
+        x = Concatenate()(layers_for_concat)
+    else:
+        x = layers_for_concat[0]
+
+    x = Conv1D(width, 1, padding='same')(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
+
+    y = Conv1D(width, 1, padding='same', strides=stride)(y)
+#     y = LayerNormalization()(y)
+    y = ReLU()(y)
+
+    x = Add()([x, y])
+    return x
+
+
+def residual_upsampling_block(x, width, bottleneck_ratio=1, group_width=None, stride=2):
+    if group_width is None:
+        group_width = width
+    else:
+        group_width = min(group_width, width)
+    y = x
+
+    x = Conv1D(width, 1, padding='same')(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
+
+    layers_for_concat = []
+    for i in range(width//bottleneck_ratio//group_width):
+        _x = Conv1DTranspose(group_width, 3, padding='same', strides=stride)(x)
+#         _x = LayerNormalization()(_x)
+        _x = ReLU()(_x)
+        layers_for_concat.append(_x)
+    if len(layers_for_concat) > 1:
+        x = Concatenate()(layers_for_concat)
+    else:
+        x = layers_for_concat[0]
+
+    x = Conv1D(width, 1, padding='same')(x)
+#     x = LayerNormalization()(x)
+    x = ReLU()(x)
+
+    y = Conv1DTranspose(width, 1, padding='same', strides=stride)(y)
+    y = ReLU()(y)
+
+    x = Add()([x, y])
+    return x
+
+
+def head_segmentation(x, name):
+    x = Conv1D(64, 1, activation='relu', padding='same')(x)
+    x = Conv1D(32, 1, activation='relu', padding='same')(x)
+    x = Conv1D(1, 1, activation='sigmoid', padding='same', name=name)(x)
+    return x
+
+
+def head_continuum(x, name):
+    x = Conv1D(64, 1, activation='relu', padding='same')(x)
+    x = Conv1D(32, 1, activation='relu', padding='same')(x)
+    x = Conv1D(1, 1, activation='relu', padding='same', name=name)(x)
+    return x
+
+
+def stem(x):
+    residual_block(x, width=16, bottleneck_ratio=1, group_width=16)
+    return x
+
+
+def PSPModule(in_features, compression, w, d):
+    # list of pool's
+    x = [in_features]
     for factor in compression:
-        x.append(interp_block_unet(factor)(input_features))
-    x = Concatenate()(x)
+        y = in_features
+        if y.shape[-1] != w:
+            y = Conv1D(w, 1, padding='same')(y)
+        x.append(interp_block(factor, w, d)(y))
+    if len(compression) > 1:
+        x = Concatenate()(x)
+    else:
+        x = in_features
     return x
 
 
-def interp_block_unet(pool_size):
+def interp_block(pool_size, w, d, b=1, g=None):
     def layer(x):
         strides = pool_size
         x = AveragePooling1D(pool_size, strides, padding='same')(x)
-        x = conv_block(x, no_channels=8, no_layers=3)
+        x = PSP_block_net(x, width=w, depth=d,
+                          bottleneck_ratio=b, group_width=g)
         x = UpSampling1D_layers(x, strides)
         return x
     return layer
 
 
-def UNet_PSPNet(input_features, block_name):
-    # Backbone
-    sqeeze_rate = 13*[2]
-    no_channels = [16, 16, 16, 32, 32, 32, 64, 64, 64, 128, 128, 128]
-    no_layers = [2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-    output_blocks = []
-    _x = input_features
-    for sq, no_channel, no_lay in zip(sqeeze_rate, no_channels, no_layers):
-        _x = conv_block(_x, no_channel, no_layers=no_lay)
-        output_blocks.append(_x)
-        _x = AveragePooling1D(sq, sq, padding='same')(_x)
-
-    # Bottom
-    _bottom = conv_block(_x, 256, no_layers=3)
-
-    # In between
-    left_layer_forward = []
-    for i, left_layer in enumerate(output_blocks):
-        compression = list(accumulate(sqeeze_rate[i:], lambda x, y: x*y))
-        left_layer_forward.append(pspnet_module_unet(
-            left_layer, compression=compression))
-
-    # Up
-    _x = _bottom
-    for i, (sq, no_channel, no_lay, left_layer) in enumerate(zip(reversed(sqeeze_rate), reversed(no_channels), reversed(no_layers), reversed(left_layer_forward))):
-        _x = Conv1D(no_channel, 2, activation='relu', name=f"UP_{i}_"+block_name, padding='same')(UpSampling1D_layers(_x, sq))
-        _x = Concatenate()([_x, left_layer])
-        _x = conv_block(_x, no_channel, no_layers=no_lay)
-    head = _x
-
-    head_seg = Conv1D(128, 1, activation='relu', padding='same', name="seg_0_"+block_name)(head)
-    head_seg = Conv1D(64, 1, activation='relu', padding='same', name="seg_1_"+block_name)(head_seg)
-    head_seg = Conv1D(1, 1, activation='sigmoid', padding='same', name="seg_"+block_name)(head_seg)
-
-    head_norm = Conv1D(128, 1, activation='relu', padding='same', name="norm_0_"+block_name)(head)
-    head_norm = Conv1D(64, 1, activation='relu', padding='same', name="norm_1_"+block_name)(head_norm)
-    head_norm = Conv1D(1, 1, activation='relu', padding='same', name="norm_"+block_name)(head_norm)
-
-    narrow_head = Conv1D(8, 1, activation='relu', padding='same', name="forward_"+block_name)(head)
-    forward_head = Concatenate()([head_norm, head_seg, narrow_head, input_features])
-
-    return head_norm, head_seg, forward_head
+def UpSampling1D_layers(inputs, size=2):
+    x = tf.reshape(inputs, (-1, inputs.shape[1], 1, inputs.shape[2]))
+    x = tf.keras.layers.UpSampling2D(
+        size=(size, 1), data_format=None, interpolation="bilinear")(x)
+    return tf.reshape(x, (-1, x.shape[1], x.shape[3]))
 
 
-def UNet_PSPNet_refine(input_features, block_name):
-    # Backbone
-    sqeeze_rate = 13*[2]
-    no_channels = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
-    no_layers = [2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-    output_blocks = []
-    _x = input_features
-    for sq, no_channel, no_lay in zip(sqeeze_rate, no_channels, no_layers):
-        _x = conv_block(_x, no_channel, no_layers=no_lay)
-        output_blocks.append(_x)
-        _x = AveragePooling1D(sq, sq, padding='same')(_x)
-
-    # Bottom
-    _bottom = conv_block(_x, 256, no_layers=3)
-
-    # Up
-    _x = _bottom
-    for i, (sq, no_channel, no_lay, left_layer) in enumerate(zip(reversed(sqeeze_rate), reversed(no_channels), reversed(no_layers), reversed(output_blocks))):
-        _x = Conv1D(no_channel, 2, activation='relu', name=f"UP_{i}_"+block_name, padding='same')(UpSampling1D_layers(_x, sq))
-        _x = Concatenate()([_x, left_layer])
-        _x = conv_block(_x, no_channel, no_layers=no_lay)
-    head = _x
-
-    head_seg = Conv1D(32, 1, activation='relu', padding='same', name="seg_0_"+block_name)(head)
-    head_seg = Conv1D(16, 1, activation='relu', padding='same', name="seg_1_"+block_name)(head_seg)
-    head_seg = Conv1D(1, 1, activation='sigmoid', padding='same', name="seg_"+block_name)(head_seg)
-
-    head_norm = Conv1D(32, 1, activation='relu', padding='same', name="norm_0_"+block_name)(head)
-    head_norm = Conv1D(16, 1, activation='relu', padding='same', name="norm_1_"+block_name)(head_norm)
-    head_norm = Conv1D(1, 1, activation='relu', padding='same', name="norm_"+block_name)(head_norm)
-
-    return head_norm, head_seg
+def PSP_block_net(x, width, depth, bottleneck_ratio=1, group_width=None):
+    for i in range(depth):
+        x = residual_block(x,
+                           width,
+                           bottleneck_ratio=bottleneck_ratio,
+                           group_width=group_width,
+                           name=None
+                           )
+    return x
 
 
-def create_SUPPNet_model(input_shape=(8192, 1)):
-    input_features = Input(shape=input_shape)
+def body_uppnet_suppnet(in_features, params):
 
-    head_norm_0, head_seg_0, forward_head = UNet_PSPNet(input_features, '0')
-    head_norm_1, head_seg_1 = UNet_PSPNet_refine(forward_head, '1')
+    d_i = params["d_i"]
+    w_i = params["w_i"]
+    psp_bool = params["psp_bool"]
+    g = params["g"]
+    w_ppm = params["w_ppm"]
+    d_ppm = params["d_ppm"]
+    b = 1
 
-    outputs = [head_norm_0, head_norm_1, head_seg_0, head_seg_1]
-    model = Model(input_features, outputs, name='SUPPNet')
+    x = in_features
+
+    # Backbone - Encoder
+    forward_skip = []
+    N = (len(d_i)-1)//2
+    for i in range(N):
+        d = d_i[i]
+        w = w_i[i]
+        w_next = w_i[i+1]
+
+        for _ in range(d-1):
+            x = residual_block(x, width=w, bottleneck_ratio=b, group_width=g)
+
+        forward_skip.append(x)
+
+        x = residual_stride_block(
+            x, width=w_next, bottleneck_ratio=b, group_width=g)
+
+    for _ in range(d_i[N]):
+        x = residual_block(x, width=w_i[N], bottleneck_ratio=b, group_width=g)
+    _x = x
+    forward_skip.append(_x)
+
+    # PSP Modules
+    log2_input_length = 13
+    for i in range(N+1):
+        # In between PSPNets
+        if psp_bool[i] > 0:
+            compression = [2**(i+1) for i in range(log2_input_length-i)]
+            forward_skip[i] = PSPModule(
+                forward_skip[i], compression, w_ppm, d_ppm)
+
+    x = forward_skip.pop()
+    # Decoder
+    for i in range(N):
+        d = d_i[i+N+1]
+        w = w_i[i+N+1]
+
+        x = residual_upsampling_block(
+            x, width=w, bottleneck_ratio=b, group_width=g)
+        if psp_bool[i] > -1:
+            x = Concatenate()([x, forward_skip[-1-i]])
+            x = Conv1D(w, 1, padding='same')(x)
+            x = ReLU()(x)
+
+        for _ in range(d-1):
+            x = residual_block(x, width=w, bottleneck_ratio=b, group_width=g)
+    return x
+
+
+def supp_model_template(params, input_shape=(8192, 1), no_forward_features=9):
+    input_vec = Input(shape=input_shape)
+    # -----------------
+    x = input_vec
+    # -----------------
+    # Part 1 :
+    x = body_uppnet_suppnet(x, params)
+    decoded_cont_1 = head_continuum(x, name="cont_1")
+    decoded_seg_1 = head_segmentation(x, name="seg_1")
+
+    # -----------------
+    # Part 2 :
+    x = Conv1D(no_forward_features, 1, activation='relu', padding='same')(x)
+    x = Concatenate()([x, decoded_cont_1, decoded_seg_1, input_vec])
+    x = body_uppnet_suppnet(x, params)
+
+    decoded_cont_2 = head_continuum(x, name="cont_2")
+    decoded_seg_2 = head_segmentation(x, name="seg_2")
+
+    model = Model(input_vec, [decoded_cont_1,
+                  decoded_seg_1, decoded_cont_2, decoded_seg_2])
 
     nadam = Nadam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999)
-    relative_weights = [1, 1]
-    loss_weights = {**{f"norm_{i}": 100*val for i, val in enumerate(relative_weights)},
-                    **{f"seg_{i}": val for i, val in enumerate(relative_weights)}}
-    loss = {**{f"norm_{i}": 'mse' for i, _ in enumerate(relative_weights)},
-            **{f"seg_{i}": 'binary_crossentropy' for i, _ in enumerate(relative_weights)}}
-    metrics = {**{f"norm_{i}": 'mae' for i, _ in enumerate(relative_weights)},
-               **{f"seg_{i}": 'accuracy' for i, _ in enumerate(relative_weights)}}
+
+    loss_weights = {f"cont_1": 400, f"seg_1": 1, f"cont_2": 400, f"seg_2": 1}
+    loss = {f"cont_1": 'mse', f"seg_1": 'binary_crossentropy',
+            f"cont_2": 'mse', f"seg_2": 'binary_crossentropy'}
+    metrics = {f"cont_1": 'mae', f"seg_1": 'accuracy',
+               f"cont_2": 'mae', f"seg_2": 'accuracy'}
 
     model.compile(loss=loss,
                   metrics=metrics,
                   loss_weights=loss_weights,
                   optimizer=nadam)
+    return model
+
+
+def create_SUPPNet_model(input_shape=(8192, 1)):
+    params = {"d_i": np.array([1,  1,  1,  2,  2,  5,  6,  7, 10,  7,  6,  5,  2,  2,  1,  1,  1]),
+              "w_i": np.array([12, 16, 16, 20, 24, 32, 44, 44, 44, 44, 44, 32, 24, 20, 16, 16, 12]),
+              "psp_bool": np.array([1, 1, 1, 1, 1, 1, 1, 1, 1]),
+              "g": 64,
+              "w_ppm": 4,
+              "d_ppm": 1,
+              }
+    model = supp_model_template(params, input_shape=(8192, 1))
     return model
 
 
@@ -153,17 +296,27 @@ class modelWrapper:
     def predict(self, X):
         results = self.model.predict(X)
         if self.norm_only:
-            return results[1]
+            return results[2]
         else:
-            return {"cont": results[1], "seg": results[3]}
+            return {"cont": results[2], "seg": results[3]}
 
 
 def get_suppnet_model(norm_only=True):
-    clear_session()
-    SUPPNet_model = create_SUPPNet_model(input_shape=(8192, 1))
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    SUPPNet_active_weights_relative_path = 'supp_weights/SUPPNet_active'
+    SUPPNet_synth_weights_relative_path = 'supp_weights/SUPPNet_active'
 
-    # SUPPNet_model.load_weights('suppnet/supp_weights/SUPP_synth')
-    SUPPNet_model.load_weights('suppnet/supp_weights/SUPP_active')
+    clear_session()
+    print("Start creating SUPPNet model!")
+    SUPPNet_model = create_SUPPNet_model(input_shape=(8192, 1))
+    print("SUPPNet model created!")
+
+    print("Start loading weights!")
+    # SUPPNet_model.load_weights(os.path.join(script_directory,SUPPNet_synth_weights_relative_path))); print("SUPPNet (synth)")
+    SUPPNet_model.load_weights(os.path.join(
+        script_directory, SUPPNet_active_weights_relative_path))
+    print("SUPPNet (active)")
+    print("Weights loaded!")
     return modelWrapper(SUPPNet_model, norm_only=norm_only)
 
 
