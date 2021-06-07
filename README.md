@@ -12,7 +12,7 @@
 ---
 
 ## Installing Guide
-SUPPNet can be istalled in several simple steps. If you want to test SUPPNet on-line version please check the [link](https://rozanskit.com/suppnet/).
+SUPPNet can be istalled in several simple steps. If you want to test SUPPNet on-line version please check the [link](https://rozanskit.com/suppnet/) (recommended Chrome browser).
 
 ### 0. Prerequisites
 
