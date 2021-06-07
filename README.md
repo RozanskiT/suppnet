@@ -22,11 +22,11 @@ Install [anaconda](conda.io) Python distribution.
 
 Download `suppnet` repository by:
 ```
-git clone https://github.com/RozanskiT/suppnet-dev.git
+git clone https://github.com/RozanskiT/suppnet.git
 ```
-Now change the directory to `suppnet-dev`:
+Now change the directory to `suppnet`:
 ```
-cd suppnet-dev
+cd suppnet
 ```
 
 ### 2. Handle requirements
@@ -38,7 +38,7 @@ conda env create -f environment.yml
 conda activate suppnet-env
 ```
 ## Usage
-After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have `suppnet-env` running):
+After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have environment `suppnet-env` running):
 ```
 python suppnet.py
 ```
