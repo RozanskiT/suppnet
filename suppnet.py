@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.ui.update_normalization.clicked.connect(
             self.on_update_normalization)
 
-        self.ui.sampling_spin_box.lineEdit().setReadOnly(True)
+        self.configure_spinning_box()
         self.ui.sampling_spin_box.valueChanged.connect(
             self.on_update_sampling)
 
@@ -101,8 +101,16 @@ class MainWindow(QMainWindow):
         self.logic.on_adjust_smooth_factor(slider_value)
         self.update_plots_and_data(resize=False)
 
+    def configure_spinning_box(self):
+        self.ui.sampling_spin_box.setMinimum(0.003)
+        self.ui.sampling_spin_box.setMaximum(0.5)
+        self.ui.sampling_spin_box.setSingleStep(0.001)
+        self.ui.sampling_spin_box.setDecimals(3)
+
     def on_update_sampling(self):
-        self.logic.set_sampling(self.ui.sampling_spin_box.value())
+        sampling_value = float(self.ui.sampling_spin_box.value())
+        print(f"Sampling changed : {sampling_value:.4f}")
+        self.logic.set_sampling(sampling_value)
 
     def for_threading(self):
         worker = Worker(*self.logic.get_model())
