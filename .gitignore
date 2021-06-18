@@ -1,4 +1,5 @@
 design_window_qt
 __pycache__
+suppnet.egg-info
 example_data/*.norm
 example_data/*.all
