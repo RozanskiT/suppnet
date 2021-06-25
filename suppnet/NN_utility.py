@@ -49,6 +49,8 @@ class ProcessSpectrum:
         return weights
 
     def resample(self, wave, flux):
+        wave = np.array(wave)
+        flux = np.array(flux)
         no_samples = int((wave[-1]-wave[0])/self.resampling_step)
         new_wave = np.linspace(wave[0], wave[-1], num=no_samples)
         mask_nnan = np.isnan(flux)
@@ -159,6 +161,22 @@ def load_nn():
                          window_len=8192
                          )
     return nn
+
+def get_suppnet(resampling_step=0.05, step_size=256, norm_only=True):
+    """
+    Returns ProcessSpectrum object that can be used for pseudo-continuum prediction:
+    continuum, continuum_error = nn.normalize(wave, flux)
+    when norm_only=False:
+    continuum, continuum_error, segmentation, segmentation_error = nn.normalize(wave, flux)
+    """
+    model = get_suppnet_model(norm_only=norm_only)
+    nn = ProcessSpectrum(model,
+                         MinMaxNormalizer(),
+                         step_size=step_size,
+                         window_len=8192,
+                         resampling_step=resampling_step
+                         )
+    return nn 
 
 
 def process_spectrum(spectrum, filename, nn):
