@@ -37,7 +37,7 @@ Now create and activate a [conda](conda.io) environment `suppnet-env` that handl
 conda env create -f environment.yml
 conda activate suppnet-env
 ```
-## Usage
+## Python script usage
 After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have environment `suppnet-env` running):
 ```
 python suppnet.py
@@ -61,3 +61,15 @@ You can always remind yourself the typical usage by writing:
 ```
 python suppnet.py --help
 ```
+
+## SUPPNet as python module
+
+You can install and use `suppnet` as regular Python module. Start from activating appropriate environment, e.g.
+```
+conda activate suppnet-env
+```
+And then call:
+```
+pip install -e .
+```
+For an example usage check the notebook in `notebooks` directory.
