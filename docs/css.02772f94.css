@@ -1,0 +1,153 @@
+div.area { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+} 
+
+input.area { 
+    margin-top: 10px; 
+} 
+
+textarea.area { 
+    margin-top: 15px; 
+    width: 70%; 
+}
+#global_container {
+    height :100vh;
+}
+#Normalize {
+    height :100vh;
+}
+#myPlot {
+    height :100vh;
+}
+
+h2 {
+    font-family: Roboto, sans-serif;
+}
+
+.rotate90 {
+    width: 75px;
+    height: 75px;
+    /* animation: spin 2s linear infinite; */
+    overflow: hidden;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.div1 {
+     border-bottom: 100px solid #0000;
+     width: 50%;
+     float: left;
+}
+
+.img {
+    float: left;
+    background: #000;
+}
+.div2 {
+    float: left;
+    border-right: 30px solid #0000;
+} 
+
+/* Styl klasy zajmującej prawą połowe */
+.right35-half
+{
+    width: 45%;
+    float: right;
+    text-align: center;
+}
+
+/* Styl klasy zajmującej lewą połowe */
+.left35-half {
+    width: 45%;
+    float: left;
+    text-align: center;
+}
+
+.right-half
+{
+    width: 50%;
+    float: right;
+}
+
+.left-half {
+    width: 50%;
+    float: left;
+}
+
+.container{
+    width: auto;
+    display: flex;
+}
+
+h1{
+    text-align: center;
+}
+
+h3{
+    text-align: center;
+}
+
+.center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+  }
+  
+.ms-1 {
+    margin-left: ($spacer * .25) !important;
+}
+  
+.px-2 {
+    padding-left: ($spacer * .5) !important;
+    padding-right: ($spacer * .5) !important;
+}
+  
+.p-3 {
+    padding: $spacer !important;
+}
+
+.my-cards{
+    border-left: 30px solid floralwhite;
+    border-right: 30px solid floralwhite;
+    border-top: 25px solid floralwhite;
+    border-bottom: 20px solid floralwhite;
+  }
+  .row{
+    background-color: floralwhite;
+  }
+  .my-abstract-and-link{
+    border-left: 70px solid floralwhite;
+    border-right: 70px solid floralwhite;
+    border-top: 20px solid floralwhite;
+    border-bottom: 20px solid floralwhite;
+  }
+
+  .color-side{
+    background-color: floralwhite;
+  }
+
+  .border-photo{
+    border-left: 10px solid floralwhite;
+    border-right: 10px solid floralwhite;
+    border-top: 10px solid floralwhite;
+    border-bottom: 10px solid floralwhite;
+  }
+
+  .my-cards-plot{
+    border-left: 30px solid floralwhite;
+    border-right: 30px solid floralwhite;
+    border-top: 0px solid floralwhite;
+    border-bottom: 20px solid floralwhite;
+  }
+
+/*# sourceMappingURL=css.02772f94.css.map */
