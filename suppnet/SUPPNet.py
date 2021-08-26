@@ -304,7 +304,8 @@ class modelWrapper:
 def get_suppnet_model(norm_only=True):
     script_directory = os.path.dirname(os.path.realpath(__file__))
     SUPPNet_active_weights_relative_path = 'supp_weights/SUPPNet_active'
-    SUPPNet_synth_weights_relative_path = 'supp_weights/SUPPNet_active'
+    SUPPNet_synth_weights_relative_path = 'supp_weights/SUPPNet_synth'
+    SUPPNet_powr_weights_relative_path = 'supp_weights/SUPPNet_18_powr'
 
     clear_session()
     print("Start creating SUPPNet model!")
@@ -313,9 +314,8 @@ def get_suppnet_model(norm_only=True):
 
     print("Start loading weights!")
     # SUPPNet_model.load_weights(os.path.join(script_directory,SUPPNet_synth_weights_relative_path))); print("SUPPNet (synth)")
-    SUPPNet_model.load_weights(os.path.join(
-        script_directory, SUPPNet_active_weights_relative_path))
-    print("SUPPNet (active)")
+    # SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_active_weights_relative_path));print("SUPPNet (active)")
+    SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_powr_weights_relative_path));print("SUPPNet (active+PoWR)")
     print("Weights loaded!")
     return modelWrapper(SUPPNet_model, norm_only=norm_only)
 
