@@ -3,11 +3,11 @@ channels:
   - conda-forge
   - anaconda
 dependencies:
-  - python
-  - numpy
-  - scipy
-  - matplotlib
-  - pandas
-  - pyside2
+  - python=3.8
+  - numpy=1.20
+  - scipy=1.6
+  - matplotlib=3.4
+  - pandas=1.2
+  - pyside2=5.13
   - tensorflow=2.4
-  - notebook
+  - notebook=6.3
