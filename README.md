@@ -37,6 +37,30 @@ Now create and activate a [conda](conda.io) environment `suppnet-env` that handl
 conda env create -f environment.yml
 conda activate suppnet-env
 ```
+
+## Creating symbolic link in local '~/bin/' directory
+
+The package contains the script SUPPNET.sh which enable user to use suppnet from any place in the system by simply calling `SUPPNET` command. To create symbolic link please make sure that you have local `~/bin` directory by running:
+```
+ls ~/bin
+```
+if you do not have `~/bin` directory you can create one by running: `mkdir ~/bin`. Then create link:
+```
+ln -s ${PWD}/SUPPNET.sh ~/bin/SUPPNET
+```
+then inspect the result by:
+```
+ls -l ~/bin/SUPPNET
+```
+you should see something like:
+```
+lrwxrwxrwx 1 tr tr 37 wrz 23 11:20 /home/tr/bin/SUPPNET -> /home/tr/repos/suppnet-dev/SUPPNET.sh
+```
+Having `SUPPNET` script installed correctly you do not need to manually activate suppnet-env environment and you can run any commands described in next paragraph by replacing `python suppnet.py` with just `SUPPNET`. To test if everything runns correctly just run:
+```
+SUPPNET
+```
+
 ## Python script usage
 After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have environment `suppnet-env` running):
 ```
