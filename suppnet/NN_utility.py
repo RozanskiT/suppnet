@@ -149,6 +149,7 @@ def process_all_spectra(paths, skip_rows):
                                delim_whitespace=True,
                                skiprows=skip_rows,
                                comment="#")
+        spectrum[1] /= np.nanmedian(spectrum[1])
         process_spectrum(spectrum, out_path, nn)
 
 
