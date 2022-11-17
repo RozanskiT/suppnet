@@ -61,6 +61,10 @@ class Logic:
         else:
             self.spectrum.columns = [
                 'wave', 'flux', 'error'] + [x for x in self.spectrum.columns[3:]]
+        median = np.nanmedian(self.spectrum['flux'])
+        self.spectrum["flux"] = self.spectrum["flux"]/median
+        if "error" in self.spectrum.columns:
+            self.spectrum["error"] = self.spectrum["error"]/median
 
     def read_processed_spectrum(self, filename):
         data = pd.read_csv(filename,
