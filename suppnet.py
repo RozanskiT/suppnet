@@ -22,13 +22,13 @@ from matplotlib.widgets import SpanSelector
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, path=None, show_segmentation=False):
+    def __init__(self, path=None, show_segmentation=False,resampling_step=0.05,which_weights="active"):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.filename_label = QLabel("")
         self.ui.statusbar.addPermanentWidget(self.filename_label)
-        self.logic = Logic()
+        self.logic = Logic(resampling_step=resampling_step, which_weights=which_weights)
         self.spline = self.logic.spline
         self.show_segmentation = show_segmentation
 
@@ -240,10 +240,11 @@ class MainWindow(QMainWindow):
             self.ax2.set_xlabel(r"Wavelength [$\AA$]")
 
 
-def run_window_app(path=None, show_segmentation=False):
+def run_window_app(path=None, show_segmentation=False, resampling_step=0.05,which_weights="active"):
     app = QApplication(sys.argv)
 
-    window = MainWindow(path=path, show_segmentation=show_segmentation)
+    window = MainWindow(path=path, show_segmentation=show_segmentation,
+                        resampling_step=resampling_step, which_weights=which_weights)
     window.show()
 
     sys.exit(app.exec_())
@@ -277,6 +278,27 @@ def argument_parser():
                         help='Do not open window app for manual normalisation.',
                         required=False
                         )
+    
+    # add argument that set the value of the resampling_step (float, default=0.05)
+    parser.add_argument('--sampling',
+                        dest='resampling_step',
+                        action='store',
+                        help='Set the sampling of the spectrum.',
+                        required=False,
+                        default=0.05,
+                        type=float
+                        )
+    
+    # add argment that defines the weights used (default=active, type string)
+    parser.add_argument('--weights',
+                        dest='which_weights',
+                        action='store',
+                        help='Set the weights used. Avalible are: active, synth, emission',
+                        required=False,
+                        default='active',
+                        type=str
+                        )
+    available_weights = ['active', 'synth', 'emission']
 
     if '--quiet' in sys.argv:
         parser.add_argument('file_names',
@@ -304,6 +326,11 @@ def argument_parser():
 
     args = parser.parse_args()
 
+    # check if the weights are available
+    if args.which_weights not in available_weights:
+        print('The weights you selected are not available. Please select one of the following: active, synth, emission')
+        sys.exit()
+
     return args
 
 
@@ -313,7 +340,12 @@ if __name__ == "__main__":
 
     if args.without_window_app:
         run_window_app(path=args.path[0],
-                       show_segmentation=args.show_segmentation)
+                       show_segmentation=args.show_segmentation,
+                       resampling_step=args.resampling_step,
+                       which_weights=args.which_weights)
     else:
         from suppnet.NN_utility import process_all_spectra
-        process_all_spectra(args.file_names, skip_rows=args.skipRows[0])
+        process_all_spectra(args.file_names, 
+                            skip_rows=args.skipRows[0], 
+                            resampling_step=args.resampling_step,
+                            which_weights=args.which_weights)
