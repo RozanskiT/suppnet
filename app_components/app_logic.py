@@ -14,7 +14,7 @@ from suppnet.SUPPNet import get_suppnet_model
 
 
 class Logic:
-    def __init__(self):
+    def __init__(self, resampling_step=0.05, which_weights="active"):
         self.spectrum = None
         self.result = None
         self.nn = None
@@ -32,12 +32,14 @@ class Logic:
 
         self.step_size = 256
         self.window_len = 8192
+        self.resampling_step = resampling_step
+        self.which_weights = which_weights
 
         self.spline = InteractiveSpline()
         self.smooth_factor = 1.0
 
     def get_model(self):
-        return get_suppnet_model, False
+        return get_suppnet_model, False, self.which_weights
 
     def read_spectrum(self, filename):
         self.spectrum = pd.read_csv(filename,
@@ -96,7 +98,8 @@ class Logic:
         self.nn = ProcessSpectrum(model,
                                   MinMaxNormalizer(),
                                   step_size=self.step_size,
-                                  window_len=self.window_len
+                                  window_len=self.window_len,
+                                  resampling_step=self.resampling_step
                                   )
 
     def on_adjust_smooth_factor(self, smooth_factor=1.0):

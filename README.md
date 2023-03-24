@@ -56,35 +56,40 @@ you should see something like:
 ```
 lrwxrwxrwx 1 tr tr 37 wrz 23 11:20 /home/tr/bin/SUPPNET -> /home/tr/repos/suppnet-dev/SUPPNET.sh
 ```
-Having `SUPPNET` script installed correctly you do not need to manually activate suppnet-env environment and you can run any commands described in next paragraph by replacing `python suppnet.py` with just `SUPPNET`. To test if everything runns correctly just run:
+Having `SUPPNET` script installed correctly you do not need to manually activate suppnet-env environment and you can run any commands described in next paragraph. To test if everything runns correctly just run:
 ```
 SUPPNET
 ```
 
 ## Python script usage
-After successful environment creation you should be able to use SUPPNet. Start with (make sure that you have environment `suppnet-env` running):
+After successful environment creation and linking the script SUPPNET in your personal `bin` directory you should be able to use SUPPNet. Spectra that you are working with should't have header: the forst column should contain wavelengths in angstroms (nanometers possible but then you need to change the sampling value from default 0.05 to 0.005), the second should contain flux. Start with:
 ```
-python suppnet.py
+SUPPNET
 ```
 The program window should pop-up and from now you can normalise your spectra. Typical usage scenarios are:
 
 1. Spectrum-by-spectrum normalisation using interactive app:
 ```
-python suppnet.py [--segmentation]
+SUPPNET [--segmentation] [--sampling RESAMPLING_STEP=0.05] [--weights WHICH_WEIGHTS=active|synth|emission]
 ```
 2. Normalisation of group of spectra without any supervision:
 ```
-python suppnet.py --quiet [--skip number_of_rows_to_skip] path_to_spec_1.txt [path_to_spec_2.txt ...]
+SUPPNET --quiet [--sampling RESAMPLING_STEP=0.05] [--weights WHICH_WEIGHTS=active|synth|emission] [--skip number_of_rows_to_skip=0] path_to_spec_1.txt [path_to_spec_2.txt ...]
 ```
 3. Manual inspection and correction of previously normalised spectrum, SUPPNet will not be loaded (often used in pair with 2.):
 ```
-python suppnet.py [--segmentation] --path path_to_processing_results.all
+SUPPNET [--segmentation] --path path_to_processing_results.all
 ```
 
 You can always remind yourself the typical usage by writing:
 ```
-python suppnet.py --help
+SUPPNET --help
 ```
+
+### --sampling and --weights options
+
+- `--sampling`, default=0.05, sampling option enable user to adjust the resampling that the neural network is using for a pseudo-continuum prediction, (Iw working with wavelengths in nm should be changed to 0.005),
+- `--weights`, default=active, set of weights that can be used, __active__ is a default one, __emission__ should be used for objects that show wide emission lines, __synth__ is a weights trained only on synthetic spectra and shouldn't be used.
 
 ## SUPPNet as python module
 

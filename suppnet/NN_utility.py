@@ -135,9 +135,9 @@ def main():
     process_all_spectra(args.file_names, skip_rows=args.skipRows[0])
 
 
-def process_all_spectra(paths, skip_rows):
+def process_all_spectra(paths, skip_rows, resampling_step=0.05, smoothing=1.0, which_weights='active'):
     print("==================================\nNeural network loading\n==================================\n")
-    nn = load_nn()
+    nn = get_suppnet(resampling_step=resampling_step, step_size=256, norm_only=False, which_weights=which_weights)
     print("==================================\nNeural network loaded\n==================================\n")
 
     for sfn in paths:
@@ -152,25 +152,14 @@ def process_all_spectra(paths, skip_rows):
         spectrum[1] /= np.nanmedian(spectrum[1])
         process_spectrum(spectrum, out_path, nn)
 
-
-def load_nn():
-    from tensorflow.keras.models import load_model
-    model = get_suppnet_model(norm_only=False)
-    nn = ProcessSpectrum(model,
-                         MinMaxNormalizer(),
-                         step_size=256,
-                         window_len=8192
-                         )
-    return nn
-
-def get_suppnet(resampling_step=0.05, step_size=256, norm_only=True):
+def get_suppnet(resampling_step=0.05, step_size=256, norm_only=True, which_weights='active'):
     """
     Returns ProcessSpectrum object that can be used for pseudo-continuum prediction:
     continuum, continuum_error = nn.normalize(wave, flux)
     when norm_only=False:
     continuum, continuum_error, segmentation, segmentation_error = nn.normalize(wave, flux)
     """
-    model = get_suppnet_model(norm_only=norm_only)
+    model = get_suppnet_model(norm_only=norm_only, which_weights=which_weights)
     nn = ProcessSpectrum(model,
                          MinMaxNormalizer(),
                          step_size=step_size,

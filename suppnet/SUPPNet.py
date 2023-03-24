@@ -301,11 +301,8 @@ class modelWrapper:
             return {"cont": results[2], "seg": results[3]}
 
 
-def get_suppnet_model(norm_only=True):
+def get_suppnet_model(norm_only=True, which_weights="active"):
     script_directory = os.path.dirname(os.path.realpath(__file__))
-    SUPPNet_active_weights_relative_path = 'supp_weights/SUPPNet_active'
-    SUPPNet_synth_weights_relative_path = 'supp_weights/SUPPNet_synth'
-    SUPPNet_powr_weights_relative_path = 'supp_weights/SUPPNet_18_powr'
 
     clear_session()
     print("Start creating SUPPNet model!")
@@ -313,9 +310,21 @@ def get_suppnet_model(norm_only=True):
     print("SUPPNet model created!")
 
     print("Start loading weights!")
-    # SUPPNet_model.load_weights(os.path.join(script_directory,SUPPNet_synth_weights_relative_path))); print("SUPPNet (synth)")
-    # SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_active_weights_relative_path));print("SUPPNet (active)")
-    SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_powr_weights_relative_path));print("SUPPNet (active+PoWR)")
+    if which_weights == "synth":
+        SUPPNet_synth_weights_relative_path = 'supp_weights/SUPPNet_synth'
+        SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_synth_weights_relative_path))
+        print("SUPPNet (synth)")
+    elif which_weights == "active":
+        SUPPNet_active_weights_relative_path = 'supp_weights/SUPPNet_active'
+        SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_active_weights_relative_path))
+        print("SUPPNet (active)")
+    elif which_weights == "emission":
+        SUPPNet_powr_weights_relative_path = 'supp_weights/SUPPNet_18_powr'
+        SUPPNet_model.load_weights(os.path.join(script_directory, SUPPNet_powr_weights_relative_path))
+        print("SUPPNet (emission, active+PoWR)")
+    else:
+        raise ValueError("Unknown model type")
+
     print("Weights loaded!")
     return modelWrapper(SUPPNet_model, norm_only=norm_only)
 
