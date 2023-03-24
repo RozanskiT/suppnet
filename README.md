@@ -88,7 +88,7 @@ SUPPNET --help
 
 ### --sampling and --weights options
 
-- `--sampling`, default=0.05, sampling option enable user to adjust the resampling that the neural network is using for a pseudo-continuum prediction, (Iw working with wavelengths in nm should be changed to 0.005),
+- `--sampling`, default=0.05, sampling option enable user to adjust the resampling that the neural network is using for a pseudo-continuum prediction, (If working with wavelengths in nm should be changed to 0.005),
 - `--weights`, default=active, set of weights that can be used, __active__ is a default one, __emission__ should be used for objects that show wide emission lines, __synth__ is a weights trained only on synthetic spectra and shouldn't be used.
 
 ## SUPPNet as python module
