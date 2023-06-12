@@ -4,11 +4,11 @@
 # licensing of 'mainwindow.ui' applies.
 #
 # Created: Sat Jun  5 22:49:16 2021
-#      by: pyside2-uic  running on PySide2 5.13.2
+#      by: pyside6-uic  running on PySide6 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -84,24 +84,24 @@ class Ui_MainWindow(object):
         self.toolBar = QtWidgets.QToolBar(MainWindow)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.actionasdsd = QtWidgets.QAction(MainWindow)
+        self.actionasdsd = QtGui.QAction(MainWindow)
         self.actionasdsd.setObjectName("actionasdsd")
-        self.action_save_file = QtWidgets.QAction(MainWindow)
+        self.action_save_file = QtGui.QAction(MainWindow)
         self.action_save_file.setObjectName("action_save_file")
-        self.actionOpen_spectrum = QtWidgets.QAction(MainWindow)
+        self.actionOpen_spectrum = QtGui.QAction(MainWindow)
         self.actionOpen_spectrum.setObjectName("actionOpen_spectrum")
-        self.actionSave_results = QtWidgets.QAction(MainWindow)
+        self.actionSave_results = QtGui.QAction(MainWindow)
         self.actionSave_results.setObjectName("actionSave_results")
-        self.actionClose = QtWidgets.QAction(MainWindow)
+        self.actionClose = QtGui.QAction(MainWindow)
         self.actionClose.setObjectName("actionClose")
-        self.action_normalize = QtWidgets.QAction(MainWindow)
+        self.action_normalize = QtGui.QAction(MainWindow)
         self.action_normalize.setEnabled(False)
         self.action_normalize.setObjectName("action_normalize")
-        self.actionOpen_processed_spectrum = QtWidgets.QAction(MainWindow)
+        self.actionOpen_processed_spectrum = QtGui.QAction(MainWindow)
         self.actionOpen_processed_spectrum.setObjectName("actionOpen_processed_spectrum")
-        self.actionSave_for_active_learning = QtWidgets.QAction(MainWindow)
+        self.actionSave_for_active_learning = QtGui.QAction(MainWindow)
         self.actionSave_for_active_learning.setObjectName("actionSave_for_active_learning")
-        self.actionSave_normed_spectrum = QtWidgets.QAction(MainWindow)
+        self.actionSave_normed_spectrum = QtGui.QAction(MainWindow)
         self.actionSave_normed_spectrum.setObjectName("actionSave_normed_spectrum")
         self.menuFile.addAction(self.actionOpen_spectrum)
         self.menuFile.addAction(self.actionSave_normed_spectrum)

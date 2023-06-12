@@ -4,9 +4,9 @@ channels:
   - anaconda
 dependencies:
   - python=3.8
-  - numpy=1.20.2
-  - scipy=1.6.2
-  - matplotlib=3.4.1
-  - pandas=1.2.4
-  - pyside2=5.13
+  - numpy=1.23.4
+  - scipy=1.10.1 
+  - matplotlib=3.7.1
+  - pandas=2.0.2
+  - pyside6=6.4.2
   - tensorflow=2.4.0
