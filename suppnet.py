@@ -6,8 +6,8 @@ import numpy as np
 from scipy.interpolate import UnivariateSpline, InterpolatedUnivariateSpline
 from tensorflow.keras.models import load_model
 
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
-from PySide2.QtCore import QFile, QThreadPool
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
+from PySide6.QtCore import QFile, QThreadPool
 from app_components.main_window_qt import Ui_MainWindow
 from app_components.worker import Worker
 from app_components.app_logic import Logic
@@ -247,7 +247,7 @@ def run_window_app(path=None, show_segmentation=False, resampling_step=0.05,whic
                         resampling_step=resampling_step, which_weights=which_weights)
     window.show()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 def argument_parser():
