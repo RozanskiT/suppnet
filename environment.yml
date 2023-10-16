@@ -6,7 +6,7 @@ dependencies:
   - python=3.8
   - numpy=1.23.4
   - scipy=1.10.1 
-  - matplotlib=3.7.1
-  - pandas=2.0.2
   - pyside6=6.4.2
+  - matplotlib-base=3.7.1
+  - pandas=2.0.2
   - tensorflow=2.4.0
