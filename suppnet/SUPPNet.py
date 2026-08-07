@@ -3,6 +3,7 @@
 
 from itertools import accumulate
 import os
+import platform
 import numpy as np
 
 import tensorflow as tf
@@ -14,6 +15,20 @@ from tensorflow.keras.layers import Conv1DTranspose, GlobalAveragePooling1D, Den
 from tensorflow.keras.layers import ReLU, LayerNormalization, Conv1DTranspose, AveragePooling1D
 from tensorflow.keras.models import Model, load_model
 import tensorflow.keras.backend as K
+
+
+def _configure_legacy_apple_silicon_tensorflow():
+    """Avoid a Grappler crash in TensorFlow 2.4 on Apple Silicon."""
+    tensorflow_version = tuple(int(part) for part in tf.__version__.split(".")[:2])
+    if (platform.system() == "Darwin"
+            and platform.machine() == "arm64"
+            and tensorflow_version <= (2, 4)):
+        optimizer_options = tf.config.optimizer.get_experimental_options()
+        optimizer_options["disable_meta_optimizer"] = True
+        tf.config.optimizer.set_experimental_options(optimizer_options)
+
+
+_configure_legacy_apple_silicon_tensorflow()
 
 
 def residual_block(x, width, bottleneck_ratio=1, group_width=None, name=None):
